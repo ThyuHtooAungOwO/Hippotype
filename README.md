@@ -55,7 +55,7 @@ To run HippoType locally:
 - [ ] **Dark Mode**  
        Add a dark mode toggle for better late-night vibes.
 
-- [ ] **Sound Effects**  
+- [x] **Sound Effects**  
        Typing sounds, game over sounds, and maybe some background music.
 
 - [ ] **Difficulty Levels**  
@@ -64,7 +64,7 @@ To run HippoType locally:
 - [ ] **High Score Tracking**  
        Store best WPM and accuracy locally using Local Storage.
 
-- [ ] **Restart with Keyboard Shortcut**  
+- [x] **Restart with Keyboard Shortcut**  
        Like pressing `Enter` to restart quickly.
 
 ---

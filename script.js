@@ -27,6 +27,13 @@ class TypingGame {
     this.visibleLines = TypingGame.VISIBLE_LINES;
     this.currentScroll = 0;
     this.isNewGame = true;
+    this.typingSounds = [
+      new Audio("assets/sounds/click1.wav"),
+      new Audio("assets/sounds/click2.wav"),
+      new Audio("assets/sounds/click3.wav"),
+      new Audio("assets/sounds/click4.wav"),
+    ];
+    this.typingSounds.volume = 0.5;
 
     this.initElements();
     this.initEvents();
@@ -76,6 +83,7 @@ class TypingGame {
       accuracy: document.getElementById("accuracy"),
       timerProgress: document.getElementById("timer-progress"),
       newGameBtn: document.getElementById("newGameBtn"),
+      restartGameText: document.getElementById("restart-text"),
     };
 
     this.elements.game.setAttribute("aria-label", "Typing game input area");
@@ -90,6 +98,13 @@ class TypingGame {
   initEvents() {
     this.elements.game.addEventListener("keyup", this.handleKey.bind(this));
     this.elements.newGameBtn.addEventListener("click", () => this.newGame());
+  }
+
+  playTypingSound() {
+    const randomIndex = Math.floor(Math.random() * this.typingSounds.length);
+    const sound = this.typingSounds[randomIndex];
+    sound.currentTime = 0;
+    sound.play();
   }
 
   getAccuracy() {
@@ -158,6 +173,9 @@ class TypingGame {
     this.elements.words.innerHTML = "";
     this.currentScroll = 0;
     this.isNewGame = true;
+    this.elements.restartGameText.style.display = "none";
+    this.elements.timerProgress.style.backgroundColor = "var(--primaryColor)";
+    this.elements.info.style.color = "var(--primaryColor)";
 
     const gameWidth = this.elements.game.offsetWidth;
     const wordWidth = 100;
@@ -198,6 +216,7 @@ class TypingGame {
 
     this.elements.words.style.transform = "translateY(0)";
     this.elements.words.style.transition = "none";
+    this.elements.cursor.style.display = "block";
     this.elements.cursor.style.opacity = "0";
     this.elements.cursor.style.transition = "opacity 0.1s ease";
 
@@ -241,12 +260,18 @@ class TypingGame {
     clearInterval(this.timer);
     this.elements.game.classList.add("over");
     this.elements.info.textContent = `Game Over!`;
+    this.elements.restartGameText.style.display = "block";
+    this.elements.cursor.style.display = "none";
     this.updateStats();
   }
 
   handleKey(ev) {
     const key = ev.key;
     const currentWord = document.querySelector(".word.current");
+    if (this.elements.game.classList.contains("over") && ev.key === " ") {
+      this.newGame();
+      return;
+    }
     if (!currentWord || this.elements.game.classList.contains("over")) return;
 
     const currentLetter = currentWord.querySelector(".letter.current");
@@ -264,6 +289,15 @@ class TypingGame {
         this.elements.timerProgress.style.width = `${
           100 - (msPassed / this.gameTime) * 100
         }%`;
+
+        if (sLeft <= 10) {
+          this.elements.timerProgress.style.backgroundColor = "#e74c3c";
+          this.elements.info.style.color = "#e74c3c";
+        } else {
+          this.elements.timerProgress.style.backgroundColor =
+            "var(--primaryColor)";
+          this.elements.info.style.color = "var(--primaryColor)";
+        }
 
         if (sLeft <= 0) {
           this.gameOver();
@@ -315,6 +349,10 @@ class TypingGame {
         if (firstLetter) firstLetter.classList.add("current");
         this.addMoreWords();
       }
+    }
+
+    if (isLetter || isSpace) {
+      this.playTypingSound();
     }
 
     if (isBackspace) {

@@ -1,16 +1,16 @@
-@import url("https://fonts.googleapis.com/css2?family=Roboto&family=Roboto+Mono&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap");
 
 :root {
-  --bgColor: #cbd5d0;
-  --textPrimary: #2e2e2e;
-  --textSecondary: #586e75;
-  --primaryColor: hsl(136, 8%, 49%);
-  --correctColor: #4caf50;
-  --incorrectColor: #e74c3c;
+  --bgColor: #1e1e2e;
+  --textPrimary: #cdd6f4;
+  --textSecondary: #a6adc8;
+  --primaryColor: #89b4fa;
+  --correctColor: #a6e3a1;
+  --incorrectColor: #f87171;
 }
 
 body {
-  font-family: "Roboto", sans-serif;
+  font-family: "Space Mono", sans-serif;
   background-color: var(--bgColor);
   color: var(--textPrimary);
   font-size: 22.4px;
@@ -29,6 +29,7 @@ main {
 }
 
 h1 {
+  font-family: "Space Grotesk", sans-serif;
   color: var(--primaryColor);
   display: flex;
   align-items: center;
@@ -60,12 +61,15 @@ h1 svg {
 }
 
 #info {
+  font-family: "Space Grotesk", sans-serif;
   color: var(--primaryColor);
   font-weight: bold;
   font-size: 25.6px;
+  transition: all 0.3s ease;
 }
 
 button {
+  font-family: "Space Grotesk", sans-serif;
   background: rgba(46, 46, 46, 0.1);
   border: 1px solid var(--primaryColor);
   color: var(--primaryColor);
@@ -94,7 +98,7 @@ button:hover {
   width: 100%;
   background: var(--primaryColor);
   border-radius: 0.3125rem;
-  transition: width 0.1s linear;
+  transition: width 0.3s linear, background-color 0.3s ease;
 }
 
 div#game {
@@ -125,7 +129,7 @@ div#game:focus {
 }
 
 #focus-error {
-  font-family: "Roboto Mono", sans-serif;
+  font-family: "Space Mono", sans-serif;
   position: absolute;
   inset: 0;
   text-align: center;
@@ -141,25 +145,48 @@ div#game:focus {
 
 div.word {
   display: inline-block;
-  font-family: "Roboto Mono", monospace;
+  font-family: "Space Mono", monospace;
   margin: 0 0.3125rem;
   position: relative;
 }
 
 .letter.correct {
-  color: var(--correctColor);
+  color: #f5c2e7;
+  font-weight: bold;
 }
 
 .letter.incorrect {
   color: var(--incorrectColor);
+  font-weight: bold;
 }
 
 .word.completed.correct {
-  background: rgba(76, 175, 80, 0.1);
+  background: rgba(166, 227, 161, 0.2);
+  color: #cdd6f4;
 }
 
 .word.completed.incorrect {
-  background: rgba(244, 67, 54, 0.1);
+  background: rgba(248, 113, 113, 0.2);
+  color: #cdd6f4;
+}
+
+.word.completed.correct,
+.word.completed.incorrect {
+  padding: 0 0.2rem;
+  border-radius: 0.3125rem;
+  transition: all 0.2s ease;
+}
+
+.word.current {
+  background-color: var(--primaryColor);
+  border-radius: 0.3125rem;
+  padding: 0 0.3125rem;
+  transform: scale(1.05);
+  transition: all 0.2s ease;
+  position: relative;
+  z-index: 1;
+  color: #1e1e2e;
+  font-weight: bold;
 }
 
 @keyframes blink {
@@ -190,26 +217,15 @@ div.word {
 
 #game.over #words {
   opacity: 0.5;
-  filter: blur(0rem);
+  filter: blur(5px);
 }
 
-#game.over:focus #cursor {
+#game.over #cursor {
   display: none;
 }
 
 #game.over #focus-error {
   display: none;
-}
-
-.word.current {
-  background-color: var(--primaryColor);
-  border-radius: 0.3125rem;
-  padding: 0 0.3125rem;
-  transform: scale(1.05);
-  transition: all 0.2s ease;
-  position: relative;
-  z-index: 1;
-  color: #fff;
 }
 
 .word {
@@ -231,6 +247,22 @@ div.word {
   to {
     opacity: 1;
   }
+}
+
+#restart-text {
+  display: none;
+  font-family: "Space Mono", sans-serif;
+  position: absolute;
+  inset: 0;
+  text-align: center;
+  padding-top: 2.1875rem;
+  color: var(--textSecondary);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+#restart-text {
+  animation: blink 1s infinite;
 }
 
 @media (max-width: 30rem) {
