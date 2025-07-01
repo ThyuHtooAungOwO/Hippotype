@@ -1,0 +1,250 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto&family=Roboto+Mono&display=swap");
+
+:root {
+  --bgColor: #cbd5d0;
+  --textPrimary: #2e2e2e;
+  --textSecondary: #586e75;
+  --primaryColor: hsl(136, 8%, 49%);
+  --correctColor: #4caf50;
+  --incorrectColor: #e74c3c;
+}
+
+body {
+  font-family: "Roboto", sans-serif;
+  background-color: var(--bgColor);
+  color: var(--textPrimary);
+  font-size: 22.4px;
+  margin: 0;
+  padding: 0;
+}
+
+main {
+  width: 90%;
+  max-width: 37.5rem;
+  margin: 1.25rem auto;
+  box-shadow: 0 0.25rem 0.625rem rgba(0, 0, 0, 0.05);
+  border-radius: 0.625rem;
+  background-color: var(--bgColor);
+  padding: 1.25rem;
+}
+
+h1 {
+  color: var(--primaryColor);
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  margin-bottom: 0.3125rem;
+}
+
+h1 svg {
+  width: 2.5rem;
+  fill: var(--primaryColor);
+}
+
+#header {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin: 0.625rem 0;
+  gap: 0.625rem;
+}
+
+#stats {
+  display: flex;
+  gap: 0.9375rem;
+  justify-content: flex-end;
+}
+
+#buttons {
+  grid-column: span 2;
+  text-align: right;
+}
+
+#info {
+  color: var(--primaryColor);
+  font-weight: bold;
+  font-size: 25.6px;
+}
+
+button {
+  background: rgba(46, 46, 46, 0.1);
+  border: 1px solid var(--primaryColor);
+  color: var(--primaryColor);
+  padding: 0.5rem 1.25rem;
+  border-radius: 0.3125rem;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.2s ease;
+}
+
+button:hover {
+  background: var(--primaryColor);
+  color: #fff;
+}
+
+#timer-container {
+  height: 0.3125rem;
+  background: rgba(255, 255, 255, 0.1);
+  margin-bottom: 0.9375rem;
+  border-radius: 0.3125rem;
+  overflow: hidden;
+}
+
+#timer-progress {
+  height: 100%;
+  width: 100%;
+  background: var(--primaryColor);
+  border-radius: 0.3125rem;
+  transition: width 0.1s linear;
+}
+
+div#game {
+  line-height: 2.1875rem;
+  height: 6.5625rem;
+  overflow: hidden;
+  position: relative;
+  border-radius: 0.3125rem;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+div#game:focus {
+  outline: 0.125rem solid var(--primaryColor);
+}
+
+#words {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  transition: top 0.2s ease;
+  filter: blur(5px);
+  color: var(--textSecondary);
+}
+
+#game:focus #words {
+  filter: blur(0);
+}
+
+#focus-error {
+  font-family: "Roboto Mono", sans-serif;
+  position: absolute;
+  inset: 0;
+  text-align: center;
+  padding-top: 2.1875rem;
+  color: var(--textSecondary);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+#game:focus #focus-error {
+  display: none;
+}
+
+div.word {
+  display: inline-block;
+  font-family: "Roboto Mono", monospace;
+  margin: 0 0.3125rem;
+  position: relative;
+}
+
+.letter.correct {
+  color: var(--correctColor);
+}
+
+.letter.incorrect {
+  color: var(--incorrectColor);
+}
+
+.word.completed.correct {
+  background: rgba(76, 175, 80, 0.1);
+}
+
+.word.completed.incorrect {
+  background: rgba(244, 67, 54, 0.1);
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+#cursor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  background-color: var(--textPrimary);
+  animation: blink 1s infinite;
+  transition: transform 0.1s ease, opacity 0.1s ease;
+  pointer-events: none;
+  z-index: 10;
+}
+
+#game:focus #cursor {
+  display: block;
+}
+
+#game.over #words {
+  opacity: 0.5;
+  filter: blur(0rem);
+}
+
+#game.over:focus #cursor {
+  display: none;
+}
+
+#game.over #focus-error {
+  display: none;
+}
+
+.word.current {
+  background-color: var(--primaryColor);
+  border-radius: 0.3125rem;
+  padding: 0 0.3125rem;
+  transform: scale(1.05);
+  transition: all 0.2s ease;
+  position: relative;
+  z-index: 1;
+  color: #fff;
+}
+
+.word {
+  transition: all 0.2s ease;
+}
+
+.has-error {
+  background-color: rgba(255, 0, 0, 0.4);
+  transition: background-color 0.3s;
+}
+.game-over {
+  background-color: rgba(0, 0, 0, 0.2);
+  animation: fadeIn 0.5s ease-in;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 30rem) {
+  body {
+    font-size: 19.2px;
+  }
+  #header {
+    grid-template-columns: 1fr;
+  }
+  #buttons {
+    grid-column: span 1;
+    text-align: center;
+  }
+  #stats {
+    justify-content: center;
+  }
+}
