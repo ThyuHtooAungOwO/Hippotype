@@ -261,7 +261,8 @@ div.word {
   cursor: pointer;
 }
 
-#restart-text {
+#restart-text,
+#focus-error {
   animation: blink 1s infinite;
 }
 

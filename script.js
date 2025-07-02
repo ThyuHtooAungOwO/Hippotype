@@ -33,7 +33,8 @@ class TypingGame {
       new Audio("assets/sounds/click3.wav"),
       new Audio("assets/sounds/click4.wav"),
     ];
-    this.typingSounds.volume = 0.5;
+    this.gameOverSound = new Audio("assets/sounds/gameOver.wav");
+    this.gameOverSound.volume = 0.5;
 
     this.initElements();
     this.initEvents();
@@ -88,11 +89,6 @@ class TypingGame {
 
     this.elements.game.setAttribute("aria-label", "Typing game input area");
     this.elements.info.setAttribute("aria-live", "polite");
-
-    this.elements.cursor.style.position = "absolute";
-    this.elements.cursor.style.zIndex = "10";
-    this.elements.cursor.style.transition =
-      "transform 0.1s ease, opacity 0.1s ease";
   }
 
   initEvents() {
@@ -148,9 +144,11 @@ class TypingGame {
     const nextLetter = document.querySelector(".letter.current");
     const nextWord = document.querySelector(".word.current");
     const activeElement = nextLetter || nextWord;
+    const cursor = this.elements.cursor;
 
     if (activeElement) {
       this.elements.words.offsetHeight; // Force reflow
+
       const rect = activeElement.getBoundingClientRect();
       const gameRect = this.elements.game.getBoundingClientRect();
 
@@ -159,14 +157,41 @@ class TypingGame {
         ? rect.left - gameRect.left
         : rect.right - gameRect.left;
 
-      this.elements.cursor.style.transform = `translate(calc(${leftPos}px - 1px), ${topPos}px)`;
-      this.elements.cursor.style.height = `${rect.height}px`;
-      this.elements.cursor.style.display = "block";
-      this.elements.cursor.style.opacity = "1";
-      this.elements.cursor.style.width = nextLetter ? "1px" : "2px";
+      cursor.style.transform = `translate(calc(${leftPos}px - 1px), ${topPos}px)`;
+      cursor.style.height = `${rect.height}px`;
+      cursor.style.display = ""; // Reset to default display
+      cursor.style.opacity = "1";
+      cursor.style.width = nextLetter ? "1px" : "2px";
     } else {
-      this.elements.cursor.style.opacity = "0";
+      cursor.style.opacity = "0";
     }
+  }
+
+  getWpm() {
+    const words = [...document.querySelectorAll(".word")];
+    const lastTypedWord = document.querySelector(".word.current");
+    if (!lastTypedWord) return 0;
+
+    const lastTypedWordIndex = words.indexOf(lastTypedWord) + 1;
+    const typedWords = words.slice(0, lastTypedWordIndex);
+    const correctWords = typedWords.filter((word) => {
+      const letters = [...word.children];
+      return (
+        letters.every((letter) => letter.classList.contains("correct")) &&
+        letters.length > 0
+      );
+    });
+
+    const currentTime = this.gameStart
+      ? new Date().getTime() - this.gameStart
+      : 0;
+    const minutes = currentTime / 60000;
+    return minutes > 0 ? correctWords.length / minutes : 0;
+  }
+
+  updateStats() {
+    this.elements.wpm.textContent = `${Math.round(this.getWpm())} WPM`;
+    this.elements.accuracy.textContent = `${Math.round(this.getAccuracy())}%`;
   }
 
   newGame() {
@@ -222,38 +247,10 @@ class TypingGame {
 
     setTimeout(() => {
       this.elements.game.focus();
-      this.updateCursorPosition();
       this.elements.words.style.transition = "transform 0.2s ease";
       this.elements.words.offsetHeight;
       this.updateCursorPosition();
     }, 50);
-  }
-
-  getWpm() {
-    const words = [...document.querySelectorAll(".word")];
-    const lastTypedWord = document.querySelector(".word.current");
-    if (!lastTypedWord) return 0;
-
-    const lastTypedWordIndex = words.indexOf(lastTypedWord) + 1;
-    const typedWords = words.slice(0, lastTypedWordIndex);
-    const correctWords = typedWords.filter((word) => {
-      const letters = [...word.children];
-      return (
-        letters.every((letter) => letter.classList.contains("correct")) &&
-        letters.length > 0
-      );
-    });
-
-    const currentTime = this.gameStart
-      ? new Date().getTime() - this.gameStart
-      : 0;
-    const minutes = currentTime / 60000;
-    return minutes > 0 ? correctWords.length / minutes : 0;
-  }
-
-  updateStats() {
-    this.elements.wpm.textContent = `${Math.round(this.getWpm())} WPM`;
-    this.elements.accuracy.textContent = `${Math.round(this.getAccuracy())}%`;
   }
 
   gameOver() {
@@ -263,12 +260,13 @@ class TypingGame {
     this.elements.restartGameText.style.display = "block";
     this.elements.cursor.style.display = "none";
     this.updateStats();
+    this.gameOverSound.play();
   }
 
   handleKey(ev) {
     const key = ev.key;
     const currentWord = document.querySelector(".word.current");
-    if (this.elements.game.classList.contains("over") && ev.key === " ") {
+    if (this.elements.game.classList.contains("over") && ev.key === "Enter") {
       this.newGame();
       return;
     }
