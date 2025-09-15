@@ -388,10 +388,13 @@ class TypingGame {
       const wordBottom = wordRect.bottom - gameRect.top;
       const containerHeight = gameRect.height;
 
-      if (wordBottom > containerHeight * 0.75) {
+      if (wordBottom > containerHeight * 0.75 + 5) {
         this.currentScroll -= (wordBottom - containerHeight * 0.75) * 0.7;
         this.elements.words.style.transform = `translateY(${this.currentScroll}px)`;
-      } else if (wordTop < containerHeight * 0.25 && this.currentScroll < 0) {
+      } else if (
+        wordTop < containerHeight * 0.25 - 5 &&
+        this.currentScroll < 0
+      ) {
         this.currentScroll = Math.min(
           0,
           this.currentScroll + (containerHeight * 0.25 - wordTop) * 0.7

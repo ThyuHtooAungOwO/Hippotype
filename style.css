@@ -119,7 +119,7 @@ div#game:focus {
   top: 0;
   left: 0;
   width: 100%;
-  transition: top 0.2s ease;
+  transition: top 0.2s ease, transform 0.15s ease-out;
   filter: blur(5px);
   color: var(--textSecondary);
 }
