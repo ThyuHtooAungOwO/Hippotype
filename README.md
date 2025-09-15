@@ -3,7 +3,7 @@
 A minimal and fun typing game to test your speed and accuracy.  
 Built with **HTML, CSS, and JavaScript** — lightweight and simple!
 
-Try it live: [Hippotype on Vercel]()
+Try it live: [Hippotype on Vercel](https://hippotype-omega.vercel.app/)
 
 ---
 
